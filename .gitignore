@@ -1,0 +1,19 @@
+# Config files
+contacts.json
+prompt_prefix.md
+
+
+.vscode/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Unit test / coverage reports
+.coverage
+coverage.xml
+.pytest_cache/
