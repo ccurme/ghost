@@ -18,8 +18,8 @@ def _make_twilio_client():
     return Client(account_sid, auth_token)
 
 
-@app.route("/bot", methods=["POST"])
-def bot():
+@app.route("/sms", methods=["POST"])
+def sms():
     twilio_client = _make_twilio_client()
     incoming_message = request.values["Body"]
     chat_partner_phone_number = request.values["From"]
