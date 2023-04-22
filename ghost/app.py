@@ -2,7 +2,6 @@ import os
 
 from flask import Flask, request
 from twilio.rest import Client
-from twilio.twiml.messaging_response import MessagingResponse
 
 from utils import initialize_agent, load_settings
 
@@ -43,9 +42,5 @@ def sms():
             from_=ai_settings["ai_phone_number"],
             to=chat_partner_phone_number,
         )
-        print(message.sid)
 
-        # TODO: this doesn't seem to work.
-        messaging_response = MessagingResponse()
-        messaging_response.message(response)
-        return str(messaging_response)
+        return message.sid
