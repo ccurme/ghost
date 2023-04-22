@@ -1,4 +1,5 @@
 import json
+import os
 from typing import List
 
 from langchain import OpenAI
@@ -35,7 +36,7 @@ def _make_qa_tool(ai_name: str, documents: List[Document]):
 
 def load_prompt_prefix() -> str:
     """Load prompt prefix."""
-    doc_path = "prompt_prefix.md"
+    doc_path = os.getenv("PROMPT_PREFIX_PATH", "settings/prompt_prefix.md")
     with open(doc_path, "r") as fp:
         prompt_prefix = fp.read()
 
@@ -47,7 +48,7 @@ def load_settings() -> dict:
     # TODO: impose structure on this dict via named tuple or dataclass
     # TODO: use loader abstractions from langchain
     # TODO: generalize this to map facts to additional chat partners
-    doc_path = "contacts.json"
+    doc_path = os.getenv("CONTACTS_PATH", "settings/contacts.json")
     with open(doc_path, "r") as fp:
         ai_settings, contacts = json.load(fp)
 
