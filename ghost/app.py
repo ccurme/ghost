@@ -7,8 +7,7 @@ from utils import initialize_agent, load_settings
 
 
 app = Flask(__name__)
-
-CONVERSATIONS = {}
+AGENT_CACHE = {}
 
 
 def _make_twilio_client():
@@ -27,14 +26,14 @@ def sms():
     if chat_partner_phone_number not in number_to_contact:
         return "Unknown number."
     else:
-        if chat_partner_phone_number in CONVERSATIONS:
-            agent_executor = CONVERSATIONS[chat_partner_phone_number]
+        if chat_partner_phone_number in AGENT_CACHE:
+            agent_executor = AGENT_CACHE[chat_partner_phone_number]
         else:
             agent_executor = initialize_agent(
                 ai_settings, number_to_contact[chat_partner_phone_number]
             )
             agent_executor.agent.llm_chain.verbose = True
-            CONVERSATIONS[chat_partner_phone_number] = agent_executor
+            AGENT_CACHE[chat_partner_phone_number] = agent_executor
         response = agent_executor.run(incoming_message)
 
         message = twilio_client.messages.create(

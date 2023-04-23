@@ -1,7 +1,7 @@
 from typing import Any
 from unittest.mock import MagicMock, patch
 
-from app import CONVERSATIONS
+import app
 from tests.utils import make_mock_twilio_client, TestApp
 
 
@@ -19,7 +19,7 @@ class TestAppUnits(TestApp):
     @patch("app.initialize_agent")
     @patch("app._make_twilio_client")
     def test_agent_management(self, make_twilio_client, initialize_agent):
-        self.assertEqual(0, len(CONVERSATIONS))
+        self.assertEqual(0, len(app.AGENT_CACHE))
         reply = "Hello"
         initialize_agent.return_value = _make_mock_agent(reply)
         self._test_response(
@@ -29,7 +29,7 @@ class TestAppUnits(TestApp):
             reply,
         )
         initialize_agent.assert_called_once()
-        self.assertEqual(1, len(CONVERSATIONS))
+        self.assertEqual(1, len(app.AGENT_CACHE))
         self._test_response(
             make_twilio_client,
             "+18001234567",
@@ -37,7 +37,7 @@ class TestAppUnits(TestApp):
             reply,
         )
         initialize_agent.assert_called_once()
-        self.assertEqual(1, len(CONVERSATIONS))
+        self.assertEqual(1, len(app.AGENT_CACHE))
         self._test_response(
             make_twilio_client,
             "+18005555555",
@@ -45,7 +45,7 @@ class TestAppUnits(TestApp):
             reply,
         )
         self.assertEqual(2, initialize_agent.call_count)
-        self.assertEqual(2, len(CONVERSATIONS))
+        self.assertEqual(2, len(app.AGENT_CACHE))
 
     @patch("app.initialize_agent")
     @patch("app._make_twilio_client")
