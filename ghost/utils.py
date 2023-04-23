@@ -6,8 +6,8 @@ from langchain import OpenAI
 from langchain.agents.agent import AgentExecutor
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.memory import ConversationBufferMemory
-from langchain.tools.vectorstore.tool import VectorStoreQATool
 from langchain.text_splitter import Document
+from langchain.tools.vectorstore.tool import VectorStoreQATool
 from langchain.vectorstores import FAISS
 
 from base import ConversationalAgent

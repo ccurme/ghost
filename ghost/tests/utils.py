@@ -6,7 +6,6 @@ from twilio.rest import Client
 
 from app import app
 
-
 MESSAGE_SID = "abc123"
 
 

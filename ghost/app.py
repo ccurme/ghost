@@ -5,7 +5,6 @@ from twilio.rest import Client
 
 from utils import initialize_agent, load_settings
 
-
 app = Flask(__name__)
 AGENT_CACHE = {}
 VERBOSE_PROMPT = os.environ.get("VERBOSE_PROMPT", False)
