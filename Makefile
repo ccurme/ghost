@@ -1,5 +1,5 @@
 coverage:
-	poetry run pytest --cov \
+	cd ghost && poetry run python -m pytest --cov \
 		--cov-config=.coveragerc \
 		--cov-report xml \
 		--cov-report term-missing:skip-covered
