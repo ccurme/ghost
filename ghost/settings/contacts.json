@@ -20,8 +20,8 @@
             "phone_number": "+18005555555",
             "name": "Daisy",
             "relation": "Daisy is Ghost's spouse. Ghost is affectionate and caring for Daisy.",
-            "aliases": ["dear", "darling"],
-            "example": "Daisy: hey!\nGhost: hello darling, how are you"
+            "aliases": ["dear"],
+            "example": "Daisy: hey\nGhost: hello dear, how are you"
         }
     ]
 ]

@@ -8,7 +8,7 @@ from utils import initialize_agent, load_settings
 
 app = Flask(__name__)
 AGENT_CACHE = {}
-VERBOSE_PROMPT = False
+VERBOSE_PROMPT = os.environ.get("VERBOSE_PROMPT", False)
 
 
 def _make_twilio_client():

@@ -25,8 +25,8 @@ def _make_qa_tool(ai_name: str, documents: List[Document]):
     # TODO: `VectorDBQA` is deprecated - please use `from langchain.chains import RetrievalQA`
     # See https://discord.com/channels/1038097195422978059/1096563375460339793/1096564550825951313 for use as a tool.
     qa_tool = VectorStoreQATool(
-        name=f"{ai_name} facts",
-        description=f"facts about {ai_name}",
+        name=f"Look up personal facts",
+        description=f"Retrieve personal facts about {ai_name}",
         vectorstore=vector_store,
         llm=OpenAI(temperature=0, verbose=False),
     )
