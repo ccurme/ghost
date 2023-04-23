@@ -25,7 +25,7 @@ def sms():
     ai_settings, contacts = load_settings()
     number_to_contact = {contact.pop("phone_number"): contact for contact in contacts}
     if chat_partner_phone_number not in number_to_contact:
-        pass
+        return "Unknown number."
     else:
         if chat_partner_phone_number in CONVERSATIONS:
             agent_executor = CONVERSATIONS[chat_partner_phone_number]
