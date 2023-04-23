@@ -25,12 +25,11 @@ class TestApp(unittest.TestCase):
         cls.app = app.test_client()
         cls.ai_phone_number = "+18008675309"
 
-    def _test_response(
+    def _post_request(
         self,
         make_twilio_client: Callable,
         incoming_number: str,
         incoming_message: str,
-        reply: str,
     ):
         mock_twilio_client = make_mock_twilio_client()
         make_twilio_client.return_value = mock_twilio_client
@@ -38,13 +37,6 @@ class TestApp(unittest.TestCase):
             "Body": incoming_message,
             "From": incoming_number,
         }
-        reply = "Hello"
         response = self.app.post("/sms", data=data, content_type="multipart/form-data")
-        self.assertEqual(200, response.status_code)
-        self.assertEqual(MESSAGE_SID, response.text)
-        expected_call = {
-            "body": reply,
-            "from_": self.ai_phone_number,
-            "to": incoming_number,
-        }
-        mock_twilio_client.messages.create.assert_called_once_with(**expected_call)
+
+        return response, mock_twilio_client
