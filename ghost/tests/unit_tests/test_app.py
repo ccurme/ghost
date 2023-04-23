@@ -2,7 +2,7 @@ from typing import Any, Callable
 from unittest.mock import MagicMock, patch
 
 import app
-from tests.utils import make_mock_twilio_client, MESSAGE_SID, TestApp
+from tests.utils import MESSAGE_SID, TestApp
 
 
 def _make_mock_agent(response: str) -> Any:
@@ -15,7 +15,6 @@ def _make_mock_agent(response: str) -> Any:
 
 
 class TestAppUnits(TestApp):
-
     def _post_request_and_test(
         self,
         make_twilio_client: Callable,
@@ -23,7 +22,9 @@ class TestAppUnits(TestApp):
         incoming_message: str,
         reply: str,
     ):
-        response, mock_twilio_client = self._post_request(make_twilio_client, incoming_number, incoming_message)
+        response, mock_twilio_client = self._post_request(
+            make_twilio_client, incoming_number, incoming_message
+        )
         self.assertEqual(200, response.status_code)
         self.assertEqual(MESSAGE_SID, response.text)
         expected_call = {
@@ -67,7 +68,9 @@ class TestAppUnits(TestApp):
     @patch("app.initialize_agent")
     @patch("app._make_twilio_client")
     def test_unknown_number(self, make_twilio_client, initialize_agent):
-        response, mock_twilio_client = self._post_request(make_twilio_client, "+18001111111", "Hi")
+        response, mock_twilio_client = self._post_request(
+            make_twilio_client, "+18001111111", "Hi"
+        )
         self.assertEqual(200, response.status_code)
         self.assertEqual("Unknown number.", response.text)
         initialize_agent.assert_not_called()

@@ -8,6 +8,7 @@ from utils import initialize_agent, load_settings
 
 app = Flask(__name__)
 AGENT_CACHE = {}
+VERBOSE_PROMPT = True
 
 
 def _make_twilio_client():
@@ -32,7 +33,7 @@ def sms():
             agent_executor = initialize_agent(
                 ai_settings, number_to_contact[chat_partner_phone_number]
             )
-            agent_executor.agent.llm_chain.verbose = True
+            agent_executor.agent.llm_chain.verbose = VERBOSE_PROMPT
             AGENT_CACHE[chat_partner_phone_number] = agent_executor
         response = agent_executor.run(incoming_message)
 
