@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Dict
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -29,15 +29,25 @@ class TestApp(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.app = app.test_client()
+        cls.ai_phone_number = "+18001234567"
 
     @patch("app.initialize_agent")
     @patch("app._make_twilio_client")
     def test_basic_use(self, make_twilio_client, initialize_agent):
-        make_twilio_client.return_value = _make_mock_twilio_client()
-        initialize_agent.return_value = _make_mock_agent("Hi Marcos.")
+        mock_twilio_client = _make_mock_twilio_client()
+        make_twilio_client.return_value = mock_twilio_client
+        incoming_number = "+18001234567"
         data = {
             "Body": "Hey Ghost",
-            "From": "+18001234567",
+            "From": self.ai_phone_number,
         }
+        reply = "Hi Marcos."
+        initialize_agent.return_value = _make_mock_agent(reply)
         response = self.app.post("/sms", data=data, content_type="multipart/form-data")
         self.assertEqual(200, response.status_code)
+        expected_call = {
+            "body": reply,
+            "from_": "+18008675309",
+            "to": incoming_number,
+        }
+        mock_twilio_client.messages.create.assert_called_once_with(**expected_call)
