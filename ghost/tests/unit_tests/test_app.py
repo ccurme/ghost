@@ -1,22 +1,8 @@
-from typing import Any, Callable
-import unittest
+from typing import Any
 from unittest.mock import MagicMock, patch
 
-from twilio.rest import Client
-
-from app import app, CONVERSATIONS
-
-
-MESSAGE_SID = "abc123"
-
-
-def _make_mock_twilio_client() -> Client:
-    mock_client = MagicMock(spec=Client)
-    mock_message = MagicMock()
-    mock_message.sid = MESSAGE_SID
-    mock_client.messages.create.return_value = mock_message
-
-    return mock_client
+from app import CONVERSATIONS
+from tests.utils import make_mock_twilio_client, TestApp
 
 
 def _make_mock_agent(response: str) -> Any:
@@ -28,35 +14,7 @@ def _make_mock_agent(response: str) -> Any:
     return mock_agent
 
 
-class TestApp(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.app = app.test_client()
-        cls.ai_phone_number = "+18008675309"
-
-    def _test_response(
-        self,
-        make_twilio_client: Callable,
-        incoming_number: str,
-        incoming_message: str,
-        reply: str,
-    ):
-        mock_twilio_client = _make_mock_twilio_client()
-        make_twilio_client.return_value = mock_twilio_client
-        data = {
-            "Body": incoming_message,
-            "From": incoming_number,
-        }
-        reply = "Hello"
-        response = self.app.post("/sms", data=data, content_type="multipart/form-data")
-        self.assertEqual(200, response.status_code)
-        self.assertEqual(MESSAGE_SID, response.text)
-        expected_call = {
-            "body": reply,
-            "from_": self.ai_phone_number,
-            "to": incoming_number,
-        }
-        mock_twilio_client.messages.create.assert_called_once_with(**expected_call)
+class TestAppUnits(TestApp):
 
     @patch("app.initialize_agent")
     @patch("app._make_twilio_client")
@@ -92,7 +50,7 @@ class TestApp(unittest.TestCase):
     @patch("app.initialize_agent")
     @patch("app._make_twilio_client")
     def test_unknown_number(self, make_twilio_client, initialize_agent):
-        mock_twilio_client = _make_mock_twilio_client()
+        mock_twilio_client = make_mock_twilio_client()
         make_twilio_client.return_value = mock_twilio_client
         incoming_number = "+18001111111"
         data = {
