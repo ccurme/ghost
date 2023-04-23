@@ -41,6 +41,10 @@ class TestAppWithLLM(TestApp):
             make_twilio_client, incoming_number, "Hey Ghost", color=color
         )
         message = self._test_response(
+            make_twilio_client, incoming_number, "Where are you right now?", color=color
+        )
+        self.assertIn("stuck in limbo", message.lower())
+        message = self._test_response(
             make_twilio_client,
             incoming_number,
             "Can you remind me your favorite food?",
