@@ -37,6 +37,7 @@ class TestAppUnits(TestApp):
     @patch("app.initialize_agent")
     @patch("app._make_twilio_client")
     def test_agent_management(self, make_twilio_client, initialize_agent):
+        app.AGENT_CACHE = {}
         self.assertEqual(0, len(app.AGENT_CACHE))
         reply = "Hello"
         initialize_agent.return_value = _make_mock_agent(reply)
