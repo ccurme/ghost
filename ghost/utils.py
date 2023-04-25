@@ -11,7 +11,7 @@ from langchain.text_splitter import Document
 from langchain.tools.vectorstore.tool import VectorStoreQATool
 from langchain.vectorstores import FAISS
 
-from prompt import INTRO_TO_CHAT_PARTNER, SUFFIX, FORMAT_INSTRUCTIONS
+from prompt import FORMAT_INSTRUCTIONS, INTRO_TO_CHAT_PARTNER, SUFFIX
 
 
 def _stringify_list(input_list):
