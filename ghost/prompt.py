@@ -1,5 +1,4 @@
 # flake8: noqa
-PREFIX = "You are {ai_prefix}."
 INTRO_TO_CHAT_PARTNER = """
 
 {ai_prefix} is chatting with {human_prefix}.
@@ -14,7 +13,7 @@ FORMAT_INSTRUCTIONS = """To use a tool, please use the following format:
 
 ```
 Thought: Do I need to use a tool? Yes
-Action: the action to take, should be one of [{tool_names}]
+Action: the action to take, should be one of [{{tool_names}}]
 Action Input: the input to the action
 Observation: the result of the action
 ```

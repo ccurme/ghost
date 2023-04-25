@@ -1,16 +1,17 @@
 import json
 import os
-from typing import List
+from typing import List, Tuple
 
 from langchain import OpenAI
 from langchain.agents.agent import AgentExecutor
+from langchain.agents.conversational.base import ConversationalAgent
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.memory import ConversationBufferMemory
 from langchain.text_splitter import Document
 from langchain.tools.vectorstore.tool import VectorStoreQATool
 from langchain.vectorstores import FAISS
 
-from base import ConversationalAgent
+from prompt import INTRO_TO_CHAT_PARTNER, SUFFIX, FORMAT_INSTRUCTIONS
 
 
 def _stringify_list(input_list):
@@ -32,6 +33,32 @@ def _make_qa_tool(ai_name: str, documents: List[Document]):
     )
 
     return qa_tool
+
+
+def _format_prompt_components(ai_settings: dict, contact_settings: dict) -> Tuple[str]:
+    """Format prompt components for agent."""
+    ai_prefix = ai_settings["name"]
+    human_prefix = contact_settings["name"]
+    chat_partner_description = f"""
+    {contact_settings["relation"]}
+    {ai_prefix} might refer to {human_prefix} by {_stringify_list(contact_settings["aliases"])}.
+
+    Example:
+    {contact_settings["example"]}
+    """
+    intro_to_chat_partner = INTRO_TO_CHAT_PARTNER.format(
+        ai_prefix=ai_prefix,
+        human_prefix=human_prefix,
+        chat_partner_description=chat_partner_description,
+    )
+
+    prefix = f"""{ai_settings["prompt_prefix"]}
+    {intro_to_chat_partner}
+    """
+    suffix = SUFFIX.format(human_prefix=human_prefix)
+    format_instructions = FORMAT_INSTRUCTIONS.format(ai_prefix=ai_prefix, human_prefix=human_prefix)
+
+    return ai_prefix, human_prefix, prefix, suffix, format_instructions
 
 
 def load_prompt_prefix() -> str:
@@ -63,15 +90,10 @@ def load_settings() -> dict:
 
 
 def initialize_agent(ai_settings: dict, contact_settings: dict) -> AgentExecutor:
-    ai_prefix = ai_settings["name"]
-    human_prefix = contact_settings["name"]
-    chat_partner_description = f"""
-    {contact_settings["relation"]}
-    {ai_prefix} might refer to {human_prefix} by {_stringify_list(contact_settings["aliases"])}.
-
-    Example:
-    {contact_settings["example"]}
-    """
+    """Make instance of AgentExecutor."""
+    ai_prefix, human_prefix, prefix, suffix, format_instructions = _format_prompt_components(
+        ai_settings, contact_settings,
+    )
     verbose = False
     llm = OpenAI(temperature=0, verbose=verbose)
     memory = ConversationBufferMemory(
@@ -80,25 +102,22 @@ def initialize_agent(ai_settings: dict, contact_settings: dict) -> AgentExecutor
     qa_tool = _make_qa_tool(ai_prefix, ai_settings["facts"])
     tools = [qa_tool]
 
-    callback_manager = None
-    agent_kwargs = None
-    agent_cls = ConversationalAgent
-    agent_kwargs = agent_kwargs or {}
-    agent_obj = agent_cls.from_llm_and_tools(
+    agent = ConversationalAgent.from_llm_and_tools(
         llm,
         tools,
-        callback_manager=callback_manager,  # **agent_kwargs
+        callback_manager=None,
         memory=memory,
         verbose=verbose,
         human_prefix=human_prefix,
         ai_prefix=ai_prefix,
-        chat_partner_description=chat_partner_description,
-        prefix=ai_settings["prompt_prefix"],
+        prefix=prefix,
+        suffix=suffix,
+        format_instructions=format_instructions,
     )
     agent_executor = AgentExecutor.from_agent_and_tools(
-        agent=agent_obj,
+        agent=agent,
         tools=tools,
-        callback_manager=callback_manager,
+        callback_manager=None,
         memory=memory,
         verbose=verbose,
     )
