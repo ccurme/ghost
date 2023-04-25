@@ -56,7 +56,9 @@ def _format_prompt_components(ai_settings: dict, contact_settings: dict) -> Tupl
     {intro_to_chat_partner}
     """
     suffix = SUFFIX.format(human_prefix=human_prefix)
-    format_instructions = FORMAT_INSTRUCTIONS.format(ai_prefix=ai_prefix, human_prefix=human_prefix)
+    format_instructions = FORMAT_INSTRUCTIONS.format(
+        ai_prefix=ai_prefix, human_prefix=human_prefix
+    )
 
     return ai_prefix, human_prefix, prefix, suffix, format_instructions
 
@@ -91,8 +93,15 @@ def load_settings() -> dict:
 
 def initialize_agent(ai_settings: dict, contact_settings: dict) -> AgentExecutor:
     """Make instance of AgentExecutor."""
-    ai_prefix, human_prefix, prefix, suffix, format_instructions = _format_prompt_components(
-        ai_settings, contact_settings,
+    (
+        ai_prefix,
+        human_prefix,
+        prefix,
+        suffix,
+        format_instructions,
+    ) = _format_prompt_components(
+        ai_settings,
+        contact_settings,
     )
     verbose = False
     llm = OpenAI(temperature=0, verbose=verbose)
