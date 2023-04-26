@@ -1,5 +1,6 @@
 import json
 import os
+from textwrap import dedent
 from typing import List, Tuple
 
 from langchain import OpenAI
@@ -11,7 +12,7 @@ from langchain.text_splitter import Document
 from langchain.tools.vectorstore.tool import VectorStoreQATool
 from langchain.vectorstores import FAISS
 
-from prompt import FORMAT_INSTRUCTIONS, INTRO_TO_CHAT_PARTNER, SUFFIX
+from prompt import CONVERSATION_HISTORY, FORMAT_INSTRUCTIONS, INTRO_TO_CHAT_PARTNER, INTRO_TO_TOOLS, SUFFIX
 
 
 def _stringify_list(input_list):
@@ -35,8 +36,8 @@ def _make_qa_tool(ai_name: str, documents: List[Document]):
     return qa_tool
 
 
-def _format_prompt_components(ai_settings: dict, contact_settings: dict) -> Tuple[str]:
-    """Format prompt components for agent."""
+def format_prompt_components_without_tools(ai_settings: dict, contact_settings: dict) -> Tuple[str]:
+    """Format prompt components but for tools."""
     ai_prefix = ai_settings["name"]
     human_prefix = contact_settings["name"]
     chat_partner_description = f"""
@@ -51,14 +52,26 @@ def _format_prompt_components(ai_settings: dict, contact_settings: dict) -> Tupl
         human_prefix=human_prefix,
         chat_partner_description=chat_partner_description,
     )
-
     prefix = f"""{ai_settings["prompt_prefix"]}
     {intro_to_chat_partner}
     """
-    suffix = SUFFIX.format(human_prefix=human_prefix)
+    prefix = prefix.replace("\t", "").replace("    ", "")
+    suffix = CONVERSATION_HISTORY
+
+    return ai_prefix, human_prefix, prefix, suffix
+
+
+def format_prompt_components_with_tools(ai_settings: dict, contact_settings: dict) -> Tuple[str]:
+    """Format prompt components for agent."""
+    ai_prefix, human_prefix, prefix, suffix = format_prompt_components_without_tools(ai_settings, contact_settings)
+    intro_to_tools = INTRO_TO_TOOLS.format(ai_prefix=ai_prefix)
+
+    prefix = "\n".join([prefix, intro_to_tools])
+    prefix = prefix.replace("\t", "").replace("    ", "")
     format_instructions = FORMAT_INSTRUCTIONS.format(
         ai_prefix=ai_prefix, human_prefix=human_prefix
     )
+    suffix = "\n".join([CONVERSATION_HISTORY, SUFFIX.format(human_prefix=human_prefix)])
 
     return ai_prefix, human_prefix, prefix, suffix, format_instructions
 
@@ -99,7 +112,7 @@ def initialize_agent(ai_settings: dict, contact_settings: dict) -> AgentExecutor
         prefix,
         suffix,
         format_instructions,
-    ) = _format_prompt_components(
+    ) = format_prompt_components_with_tools(
         ai_settings,
         contact_settings,
     )
