@@ -14,7 +14,9 @@ def _stringify_list(input_list):
     return result
 
 
-def format_prompt_components_without_tools(ai_settings: dict, contact_settings: dict) -> Tuple[str]:
+def format_prompt_components_without_tools(
+    ai_settings: dict, contact_settings: dict
+) -> Tuple[str]:
     """Format prompt components but for tools."""
     ai_prefix = ai_settings["name"]
     human_prefix = contact_settings["name"]
