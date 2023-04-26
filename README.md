@@ -1,7 +1,17 @@
 # Ghost
 Create an AI replica of yourself that is accessible via SMS.
 
-### Start server:
+## Configuration
+Ghost requires two configuration files to tailor your chat responses:
+1. Describe your background, writing style, or mannerisms by modifying [prompt_prefix.md](ghost/settings/prompt_prefix.md), or setting the `PROMPT_PREFIX_PATH=/path/to/prompt_prefix.md` environment variable.
+1. Provide structured information such as your SMS-enabled Twilio phone number, chatbot name, and aliases. This information belongs in the first element of the [contacts.json](ghost/settings/contacts.json) array. You can also point to this configuration file by setting the `CONTACTS_PATH=/path/to/contacts.json` environment variable.
+
+The [contacts.json](ghost/settings/contacts.json) file specifies other important information such as facts about yourself, allowed senders for incoming messages, and information about the senders that helps Ghost tailor its responses. See [settings/README.md](ghost/settings/README.md) for more detail.
+
+## Usage
+Ghost currently uses OpenAI LLMs and embeddings, so you will need to provide an API key. You will also need a [Twilio](https://www.twilio.com/console) account ID, auth token, and SMS-enabled phone number.
+
+Start server:
 ```
 TWILIO_ACCOUNT_SID=... TWILIO_AUTH_TOKEN=... OPENAI_API_KEY=... flask run
 ```
@@ -13,7 +23,6 @@ See [Makefile](Makefile) for testing, test coverage and linting.
 make unit_tests
 ```
 ### Integration tests:
-Ghost currently uses OpenAI LLMs and embeddings, so you will need to provide an API key:
 ```
 OPENAI_API_KEY=... make integration_tests
 ```
