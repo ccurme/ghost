@@ -1,14 +1,20 @@
 import logging
 import os
 
-from flask import Flask, request
+from flask import Flask, Request, request
+from flask_jwt_extended import create_access_token, JWTManager, jwt_required
+from twilio.request_validator import RequestValidator
 from twilio.rest import Client
 
 from agent_utils import initialize_agent
 from unsolicited_message import generate_unsolicited_message
 from utils import load_settings
 
+
 app = Flask(__name__)
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+jwt = JWTManager(app)
+URL = os.environ["URL"]
 
 LOGLEVEL = 25  # Above info
 logging.basicConfig(level=LOGLEVEL)
@@ -22,6 +28,13 @@ def _make_twilio_client():
     account_sid = os.environ["TWILIO_ACCOUNT_SID"]
     auth_token = os.environ["TWILIO_AUTH_TOKEN"]
     return Client(account_sid, auth_token)
+
+
+def _validate_twilio_request(request: Request) -> bool:
+    """Validate that post request is from Twilio."""
+    validator = RequestValidator(os.environ["TWILIO_AUTH_TOKEN"])
+    twilio_signature = request.headers.get("X-Twilio-Signature", "")
+    return validator.validate(URL, request.values, twilio_signature)
 
 
 def _validate_number_and_get_agent(
@@ -46,6 +59,8 @@ def _validate_number_and_get_agent(
 @app.route("/sms", methods=["POST"])
 def sms():
     """Receive message and send response."""
+    if not _validate_twilio_request(request):
+        return "Invalid request."
     twilio_client = _make_twilio_client()
     incoming_message = request.values["Body"]
     chat_partner_phone_number = request.values["From"]
@@ -73,6 +88,7 @@ def sms():
 
 
 @app.route("/unsolicited_message", methods=["POST"])
+@jwt_required()
 def unsolicited_message():
     """Send message."""
     twilio_client = _make_twilio_client()
@@ -104,3 +120,13 @@ def unsolicited_message():
         logger.log(LOGLEVEL, f"Sent {chat_partner_phone_number}: {message}")
 
     return twliio_message.sid
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    secret_key = request.values["secret_key"]
+    if secret_key == app.config["SECRET_KEY"]:
+        access_token = create_access_token(identity=secret_key)
+        return {"access_token": access_token}
+    else:
+        return {}

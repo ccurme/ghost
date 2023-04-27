@@ -13,7 +13,7 @@ Ghost currently uses OpenAI LLMs and embeddings, so you will need to provide an 
 
 Start server:
 ```
-TWILIO_ACCOUNT_SID=... TWILIO_AUTH_TOKEN=... OPENAI_API_KEY=... flask run
+TWILIO_ACCOUNT_SID=... TWILIO_AUTH_TOKEN=... OPENAI_API_KEY=... URL=... flask run
 ```
 
 ## Testing
