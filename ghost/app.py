@@ -14,7 +14,7 @@ from utils import load_settings
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 jwt = JWTManager(app)
-URL = os.environ["URL"]
+URL = os.environ.get("URL")
 
 LOGLEVEL = 25  # Above info
 logging.basicConfig(level=LOGLEVEL)
@@ -32,7 +32,7 @@ def _make_twilio_client():
 
 def _validate_twilio_request(request: Request) -> bool:
     """Validate that post request is from Twilio."""
-    validator = RequestValidator(os.environ["TWILIO_AUTH_TOKEN"])
+    validator = RequestValidator(os.environ.get("TWILIO_AUTH_TOKEN"))
     twilio_signature = request.headers.get("X-Twilio-Signature", "")
     return validator.validate(URL, request.values, twilio_signature)
 
