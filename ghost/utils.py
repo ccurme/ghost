@@ -50,7 +50,7 @@ def load_prompt_prefix() -> str:
     return prompt_prefix
 
 
-def load_settings() -> dict:
+def load_settings() -> Tuple[dict, list]:
     """Load AI settings and contacts."""
     # TODO: impose structure on this dict via named tuple or dataclass
     # TODO: use loader abstractions from langchain
