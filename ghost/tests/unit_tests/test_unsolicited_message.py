@@ -5,7 +5,6 @@ import unsolicited_message
 
 
 class TestUnsolicitedMessage(unittest.TestCase):
-
     def test_extract_message(self):
         message = """
         Remember when we went to the shrimp restaurant?

@@ -16,14 +16,11 @@ def _make_mock_agent(response: str) -> Any:
 class TestAppUnits(TestApp):
     def _post_request_and_test(
         self,
-        make_twilio_client: Callable,
         incoming_number: str,
         incoming_message: str,
         reply: str,
     ):
-        response, mock_twilio_client = self._post_sms(
-            make_twilio_client, incoming_number, incoming_message
-        )
+        response, mock_twilio_client = self._post_sms(incoming_number, incoming_message)
         self.assertEqual(200, response.status_code)
         self.assertEqual(MESSAGE_SID, response.text)
         expected_call = {
@@ -34,14 +31,12 @@ class TestAppUnits(TestApp):
         mock_twilio_client.messages.create.assert_called_once_with(**expected_call)
 
     @patch("app.initialize_agent")
-    @patch("app._make_twilio_client")
-    def test_agent_management(self, make_twilio_client, initialize_agent):
+    def test_agent_management(self, initialize_agent):
         app.AGENT_CACHE = {}
         self.assertEqual(0, len(app.AGENT_CACHE))
         reply = "Hello"
         initialize_agent.return_value = _make_mock_agent(reply)
         self._post_request_and_test(
-            make_twilio_client,
             "+18001234567",
             "Hey Ghost",
             reply,
@@ -49,7 +44,6 @@ class TestAppUnits(TestApp):
         initialize_agent.assert_called_once()
         self.assertEqual(1, len(app.AGENT_CACHE))
         self._post_request_and_test(
-            make_twilio_client,
             "+18001234567",
             "How are you?",
             reply,
@@ -57,7 +51,6 @@ class TestAppUnits(TestApp):
         initialize_agent.assert_called_once()
         self.assertEqual(1, len(app.AGENT_CACHE))
         self._post_request_and_test(
-            make_twilio_client,
             "+18005555555",
             "Hi",
             reply,
@@ -66,11 +59,8 @@ class TestAppUnits(TestApp):
         self.assertEqual(2, len(app.AGENT_CACHE))
 
     @patch("app.initialize_agent")
-    @patch("app._make_twilio_client")
-    def test_unknown_number(self, make_twilio_client, initialize_agent):
-        response, mock_twilio_client = self._post_sms(
-            make_twilio_client, "+18001111111", "Hi"
-        )
+    def test_unknown_number(self, initialize_agent):
+        response, mock_twilio_client = self._post_sms("+18001111111", "Hi")
         self.assertEqual(200, response.status_code)
         self.assertEqual("Unknown number.", response.text)
         initialize_agent.assert_not_called()

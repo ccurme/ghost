@@ -57,7 +57,9 @@ class TestUnsolicitedMessage(unittest.TestCase):
 
         # Test first message
         print_text("\n\n")
-        print_text("Test we get a reasonable message if we message first:", color="green")
+        print_text(
+            "Test we get a reasonable message if we message first:", color="green"
+        )
         agent = initialize_agent(ai_settings, contact_settings)
         prompt = dedent(
             f"""

@@ -33,11 +33,12 @@ class TestApp(unittest.TestCase):
         cls.ai_phone_number = "+18008675309"
 
     @patch("app.RequestValidator")
+    @patch("app._make_twilio_client")
     def _post_sms(
         self,
-        make_twilio_client: Callable,
         incoming_number: str,
         incoming_message: str,
+        make_twilio_client: Callable,
         make_request_validator: Callable,
     ):
         mock_request_validator = make_mock_request_validator(True)
@@ -51,7 +52,7 @@ class TestApp(unittest.TestCase):
         response = self.app.post("/sms", data=data, content_type="multipart/form-data")
 
         return response, mock_twilio_client
-    
+
     def _post_unsolicited_message(
         self,
         make_twilio_client: Callable,
@@ -61,6 +62,8 @@ class TestApp(unittest.TestCase):
         mock_twilio_client = make_mock_twilio_client()
         make_twilio_client.return_value = mock_twilio_client
         data = {"to": outgoing_number, "prompt": prompt}
-        response = self.app.post("/unsolicited_message", data=data, content_type="multipart/form-data")
+        response = self.app.post(
+            "/unsolicited_message", data=data, content_type="multipart/form-data"
+        )
 
         return response, mock_twilio_client
