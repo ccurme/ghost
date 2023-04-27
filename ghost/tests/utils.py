@@ -40,8 +40,9 @@ class TestApp(unittest.TestCase):
         incoming_message: str,
         make_twilio_client: Callable,
         make_request_validator: Callable,
+        valid_request : bool = True,
     ):
-        mock_request_validator = make_mock_request_validator(True)
+        mock_request_validator = make_mock_request_validator(valid_request)
         make_request_validator.return_value = mock_request_validator
         mock_twilio_client = make_mock_twilio_client()
         make_twilio_client.return_value = mock_twilio_client
