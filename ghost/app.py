@@ -1,3 +1,4 @@
+import logging
 import os
 
 from flask import Flask, request
@@ -8,6 +9,11 @@ from unsolicited_message import generate_unsolicited_message
 from utils import load_settings
 
 app = Flask(__name__)
+
+LOGLEVEL = 25  # Above info
+logging.basicConfig(level=LOGLEVEL)
+logger = logging.getLogger(__name__)
+
 AGENT_CACHE = {}
 VERBOSE_PROMPT = os.environ.get("VERBOSE_PROMPT", "False").lower() in ("true", "1")
 
@@ -43,6 +49,7 @@ def sms():
     twilio_client = _make_twilio_client()
     incoming_message = request.values["Body"]
     chat_partner_phone_number = request.values["From"]
+    logger.log(LOGLEVEL, f"Received {chat_partner_phone_number}: {incoming_message}")
     ai_settings, contacts = load_settings()
     contacts = {
         contact.pop("phone_number"): contact for contact in contacts
@@ -60,6 +67,7 @@ def sms():
             from_=ai_settings["ai_phone_number"],
             to=chat_partner_phone_number,
         )
+        logger.log(LOGLEVEL, f"Sent {chat_partner_phone_number}: {response}")
 
         return twliio_message.sid
 
@@ -93,5 +101,6 @@ def unsolicited_message():
             from_=ai_settings["ai_phone_number"],
             to=chat_partner_phone_number,
         )
+        logger.log(LOGLEVEL, f"Sent {chat_partner_phone_number}: {message}")
 
     return twliio_message.sid
