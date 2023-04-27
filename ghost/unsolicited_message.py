@@ -6,6 +6,12 @@ from langchain.agents.agent import AgentExecutor
 from utils import format_prompt_components_without_tools
 
 
+def _extract_first_message(message: str) -> str:
+    """The LLM can continue the conversation from the recipient. So extract just the first line."""
+
+    return message.split("\n")[0]
+
+
 def get_unsolicited_message_prompt(ai_prefix: str, human_prefix: str) -> str:
     """Get prompt for unsolicited message."""
     inspirational_thought = f"""
@@ -35,6 +41,7 @@ def generate_unsolicited_message(
     )
     llm = OpenAI(temperature=temperature)
     message = llm(prompt)
+    message = _extract_first_message(message)
 
     agent.memory.chat_memory.add_ai_message(message)
 
