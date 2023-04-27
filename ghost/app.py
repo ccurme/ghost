@@ -2,7 +2,7 @@ import logging
 import os
 
 from flask import Flask, Request, request
-from flask_jwt_extended import create_access_token, JWTManager, jwt_required
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from twilio.request_validator import RequestValidator
 from twilio.rest import Client
 

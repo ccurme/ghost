@@ -1,13 +1,12 @@
-from typing import Callable
-from unittest.mock import ANY, patch
+from unittest.mock import ANY
 
 from flask import Response
 from langchain.input import print_text
 from twilio.rest import Client
 
+from tests.utils import TestApp
 from unsolicited_message import get_unsolicited_message_prompt
 from utils import load_settings
-from tests.utils import TestApp
 
 
 class TestAppWithLLM(TestApp):
