@@ -65,10 +65,12 @@ class TestAppUnits(TestApp):
         self.assertEqual("Unknown number.", response.text)
         initialize_agent.assert_not_called()
         mock_twilio_client.messages.create.assert_not_called()
-    
+
     @patch("app.initialize_agent")
     def test_invalid_request(self, initialize_agent):
-        response, mock_twilio_client = self._post_sms("+18001234567", "Hi", valid_request=False)
+        response, mock_twilio_client = self._post_sms(
+            "+18001234567", "Hi", valid_request=False
+        )
         self.assertEqual(200, response.status_code)
         self.assertEqual("Invalid request.", response.text)
         initialize_agent.assert_not_called()

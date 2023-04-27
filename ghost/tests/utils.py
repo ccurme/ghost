@@ -41,7 +41,7 @@ class TestApp(unittest.TestCase):
         incoming_message: str,
         make_twilio_client: Callable,
         make_request_validator: Callable,
-        valid_request : bool = True,
+        valid_request: bool = True,
     ):
         mock_request_validator = make_mock_request_validator(valid_request)
         make_request_validator.return_value = mock_request_validator
@@ -70,7 +70,10 @@ class TestApp(unittest.TestCase):
             access_token = create_access_token(identity=123)
         headers = {"Authorization": f"Bearer {access_token}"}
         response = self.app.post(
-            "/unsolicited_message", data=data, content_type="multipart/form-data", headers=headers,
+            "/unsolicited_message",
+            data=data,
+            content_type="multipart/form-data",
+            headers=headers,
         )
 
         return response, mock_twilio_client
