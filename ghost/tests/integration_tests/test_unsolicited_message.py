@@ -63,7 +63,7 @@ class TestUnsolicitedMessage(unittest.TestCase):
         agent = initialize_agent(ai_settings, contact_settings)
         prompt = dedent(
             f"""
-        *{ai_prefix} surprised {human_prefix} one day with a joke:*
+        *{ai_prefix} sent a joke to {human_prefix}:*
 
         {ai_prefix}:
         """
