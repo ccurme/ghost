@@ -35,6 +35,7 @@ jupyter = "^1.0.0"
 
 [tool.isort]
 profile = "black"
+src_paths = ["ghost"]
 
 [tool.mypy]
 ignore_missing_imports = "True"
