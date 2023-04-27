@@ -103,6 +103,7 @@ class TestAppWithLLM(TestApp):
         self.assertIn("food", message.lower())
 
         # Unsolicited message
+        # TODO: unit test with mocked LLMs
         ai_settings, contacts = load_settings()
         contact_settings = [contact for contact in contacts if contact["phone_number"] == incoming_number][0]
         prompt = get_unsolicited_message_prompt(ai_settings["name"], contact_settings["name"])
