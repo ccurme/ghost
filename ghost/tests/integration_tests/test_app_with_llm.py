@@ -97,7 +97,6 @@ class TestAppWithLLM(TestApp):
         self.assertIn("food", message.lower())
 
         # Unsolicited message
-        # TODO: unit test with mocked LLMs
         ai_settings, contacts = load_settings()
         contact_settings = [
             contact
