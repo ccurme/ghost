@@ -18,7 +18,9 @@ class TestUnsolicitedMessage(unittest.TestCase):
 
         ai_prefix = ai_settings["name"]
         human_prefix = contact_settings["name"]
-        prompt = unsolicited_message.get_unsolicited_message_prompt(ai_prefix, human_prefix)
+        prompt = unsolicited_message.get_unsolicited_message_prompt(
+            ai_prefix, human_prefix
+        )
 
         message = unsolicited_message.generate_unsolicited_message(
             prompt,
@@ -36,11 +38,14 @@ class TestUnsolicitedMessage(unittest.TestCase):
         _ = agent.run("Sorry, can you repeat what you just said?")
         self.assertEqual(5, len(agent.memory.chat_memory.messages))
 
-        prompt = dedent(f"""
+        prompt = dedent(
+            f"""
         *{ai_prefix} then took the conversation in an entirely new direction with a random question:*
 
         {ai_prefix}:
-        """)
+        """
+        )
+        import pdb; pdb.set_trace()
         _ = unsolicited_message.generate_unsolicited_message(
             prompt,
             agent,

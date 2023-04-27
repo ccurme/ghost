@@ -18,7 +18,11 @@ def get_unsolicited_message_prompt(ai_prefix: str, human_prefix: str) -> str:
 
 
 def generate_unsolicited_message(
-    prompt: str, agent: AgentExecutor, ai_settings: dict, contact_settings: dict, temperature: int = 0,
+    prompt: str,
+    agent: AgentExecutor,
+    ai_settings: dict,
+    contact_settings: dict,
+    temperature: int = 0,
 ) -> str:
     """Generate AI message without message from user."""
 
