@@ -54,3 +54,23 @@ class TestUnsolicitedMessage(unittest.TestCase):
         )
 
         print_text(f"\n{agent.memory.buffer}", color="green")
+
+        # Test first message
+        print_text("\n\n")
+        print_text("Test we get a reasonable message if we message first:", color="green")
+        agent = initialize_agent(ai_settings, contact_settings)
+        prompt = dedent(
+            f"""
+        *{ai_prefix} surprised {human_prefix} one day with a joke:*
+
+        {ai_prefix}:
+        """
+        )
+        _ = unsolicited_message.generate_unsolicited_message(
+            prompt,
+            agent,
+            ai_settings,
+            contact_settings,
+            temperature=0.7,
+        )
+        print_text(f"\n{agent.memory.buffer}", color="green")
