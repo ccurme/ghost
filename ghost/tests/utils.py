@@ -2,6 +2,7 @@ from typing import Callable
 import unittest
 from unittest.mock import MagicMock, patch
 
+from flask_jwt_extended import create_access_token
 from twilio.request_validator import RequestValidator
 from twilio.rest import Client
 
@@ -54,17 +55,22 @@ class TestApp(unittest.TestCase):
 
         return response, mock_twilio_client
 
+    @patch("app._make_twilio_client")
     def _post_unsolicited_message(
         self,
-        make_twilio_client: Callable,
         outgoing_number: str,
         prompt: str,
+        make_twilio_client: Callable,
     ):
         mock_twilio_client = make_mock_twilio_client()
         make_twilio_client.return_value = mock_twilio_client
         data = {"to": outgoing_number, "prompt": prompt}
+        with app.test_request_context():
+            app.config["SECRET_KEY"] = "secret"
+            access_token = create_access_token(identity=123)
+        headers = {"Authorization": f"Bearer {access_token}"}
         response = self.app.post(
-            "/unsolicited_message", data=data, content_type="multipart/form-data"
+            "/unsolicited_message", data=data, content_type="multipart/form-data", headers=headers,
         )
 
         return response, mock_twilio_client

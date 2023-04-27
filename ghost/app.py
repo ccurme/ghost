@@ -126,7 +126,7 @@ def unsolicited_message():
 def login():
     secret_key = request.values["secret_key"]
     if secret_key == app.config["SECRET_KEY"]:
-        access_token = create_access_token(identity=secret_key)
+        access_token = create_access_token(identity=123)
         return {"access_token": access_token}
     else:
         return {}
