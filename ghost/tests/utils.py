@@ -24,7 +24,7 @@ class TestApp(unittest.TestCase):
         cls.app = app.test_client()
         cls.ai_phone_number = "+18008675309"
 
-    def _post_request(
+    def _post_sms(
         self,
         make_twilio_client: Callable,
         incoming_number: str,
@@ -37,5 +37,18 @@ class TestApp(unittest.TestCase):
             "From": incoming_number,
         }
         response = self.app.post("/sms", data=data, content_type="multipart/form-data")
+
+        return response, mock_twilio_client
+    
+    def _post_unsolicited_message(
+        self,
+        make_twilio_client: Callable,
+        outgoing_number: str,
+        prompt: str,
+    ):
+        mock_twilio_client = make_mock_twilio_client()
+        make_twilio_client.return_value = mock_twilio_client
+        data = {"to": outgoing_number, "prompt": prompt}
+        response = self.app.post("/unsolicited_message", data=data, content_type="multipart/form-data")
 
         return response, mock_twilio_client

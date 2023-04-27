@@ -45,7 +45,6 @@ class TestUnsolicitedMessage(unittest.TestCase):
         {ai_prefix}:
         """
         )
-        import pdb; pdb.set_trace()
         _ = unsolicited_message.generate_unsolicited_message(
             prompt,
             agent,
