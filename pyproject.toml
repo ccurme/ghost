@@ -10,7 +10,7 @@ repository = "https://github.com/ccurme/ghost"
 [tool.poetry.dependencies]
 python = ">= 3.9, < 4.0"
 ipython = "^8.8.0"
-langchain = ">= 0.0.134, < 0.0.135"  # TODO: update this
+langchain = ">= 0.0.134, < 1.0"
 tiktoken = ">= 0.3.0, < 1"
 faiss-cpu = ">= 1.7.3, < 2"
 openai = ">= 0.27.0"
