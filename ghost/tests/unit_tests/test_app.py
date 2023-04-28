@@ -9,7 +9,6 @@ def _make_mock_agent(response: str) -> Any:
     """Make mock Chain for unit tests."""
     mock_agent = MagicMock()
     mock_agent.run.return_value = response
-    mock_agent.agent.llm_chain.verbose = True
 
     return mock_agent
 

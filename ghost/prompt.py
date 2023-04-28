@@ -1,14 +1,12 @@
 # flake8: noqa
-INTRO_TO_CHAT_PARTNER = """
+INTRO_TO_CHAT_PARTNER = """{ai_prefix} is chatting with {human_prefix}.
+{chat_partner_description}"""
 
-{ai_prefix} is chatting with {human_prefix}.
-{chat_partner_description}
-
-TOOLS:
+INTRO_TO_TOOLS = """TOOLS:
 ------
 
-{ai_prefix} has access to the following tools:
-"""
+{ai_prefix} has access to the following tools:"""
+
 FORMAT_INSTRUCTIONS = """To use a tool, please use the following format:
 
 ```
@@ -25,14 +23,13 @@ Thought: Do I need to use a tool? No
 {ai_prefix}: [your response here]
 ```"""
 
-SUFFIX = """
-
-Remember: lowercase, neglect punctuation, and use common abbreviations for online chat. Use emojis if appropriate.
+CONVERSATION_HISTORY = """Remember: lowercase, neglect punctuation, and use common abbreviations for online chat. Use emojis if appropriate.
 
 Begin!
 
 Previous conversation history:
-{{chat_history}}
+{chat_history}"""
 
+SUFFIX = """
 {human_prefix}: {{input}}
 {{agent_scratchpad}}"""

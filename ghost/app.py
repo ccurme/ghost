@@ -3,7 +3,8 @@ import os
 from flask import Flask, request
 from twilio.rest import Client
 
-from utils import initialize_agent, load_settings
+from agent_utils import initialize_agent
+from utils import load_settings
 
 app = Flask(__name__)
 AGENT_CACHE = {}
