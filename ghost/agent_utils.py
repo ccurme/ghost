@@ -27,9 +27,13 @@ def _make_qa_tool(ai_name: str, documents: List[Document]):
     return qa_tool
 
 
-def format_prompt_components_with_tools(ai_settings: dict, contact_settings: dict) -> Tuple[str]:
+def format_prompt_components_with_tools(
+    ai_settings: dict, contact_settings: dict
+) -> Tuple[str]:
     """Format prompt components for agent."""
-    ai_prefix, human_prefix, prefix, suffix = format_prompt_components_without_tools(ai_settings, contact_settings)
+    ai_prefix, human_prefix, prefix, suffix = format_prompt_components_without_tools(
+        ai_settings, contact_settings
+    )
     intro_to_tools = INTRO_TO_TOOLS.format(ai_prefix=ai_prefix)
 
     prefix = "\n".join([prefix, intro_to_tools])

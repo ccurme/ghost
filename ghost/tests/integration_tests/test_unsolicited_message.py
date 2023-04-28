@@ -9,7 +9,6 @@ from utils import load_settings
 
 
 class TestUnsolicitedMessage(unittest.TestCase):
-
     def test_unsolicited_message(self):
         ai_settings, contacts = load_settings()
         contact_settings = contacts[0]
@@ -17,7 +16,9 @@ class TestUnsolicitedMessage(unittest.TestCase):
         _ = agent.run("Hi, how are you?")
 
         message = unsolicited_message.generate_unsolicited_message(
-            ai_settings, contact_settings, agent,
+            ai_settings,
+            contact_settings,
+            agent,
         )
         self.assertEqual(3, len(agent.memory.chat_memory.messages))
         message_1, message_2, message_3 = agent.memory.chat_memory.messages
@@ -25,7 +26,7 @@ class TestUnsolicitedMessage(unittest.TestCase):
         self.assertIsInstance(message_2, AIMessage)
         self.assertIsInstance(message_3, AIMessage)
         self.assertEqual(message, message_3.content)
-        
+
         _ = agent.run("Sorry, can you repeat what you just said?")
         self.assertEqual(5, len(agent.memory.chat_memory.messages))
 
