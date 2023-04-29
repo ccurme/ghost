@@ -17,6 +17,7 @@ openai = ">= 0.27.0"
 flask = ">= 2.2.3,< 3.0"
 twilio = ">= 8.0.0, < 9.0"
 PyJWT = " >= 2.6.0"
+pyngrok = " >= 6.0.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.2.0"
