@@ -4,7 +4,7 @@ import unittest
 import unsolicited_message
 
 
-class TestUnsolicitedMessage(unittest.TestCase):
+class TestUnsolicitedMessageUtils(unittest.TestCase):
     def test_extract_message(self):
         message = """
         Remember when we went to the shrimp restaurant?
