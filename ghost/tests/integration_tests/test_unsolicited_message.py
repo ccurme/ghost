@@ -41,8 +41,6 @@ class TestUnsolicitedMessage(unittest.TestCase):
         prompt = dedent(
             f"""
         *{ai_prefix} then took the conversation in an entirely new direction with a random question:*
-
-        {ai_prefix}:
         """
         )
         _ = unsolicited_message.generate_unsolicited_message(
@@ -64,8 +62,6 @@ class TestUnsolicitedMessage(unittest.TestCase):
         prompt = dedent(
             f"""
         *{ai_prefix} sent a joke to {human_prefix}:*
-
-        {ai_prefix}:
         """
         )
         _ = unsolicited_message.generate_unsolicited_message(

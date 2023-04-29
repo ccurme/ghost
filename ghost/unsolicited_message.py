@@ -15,10 +15,7 @@ def _extract_first_message(message: str) -> str:
 def get_unsolicited_message_prompt(ai_prefix: str, human_prefix: str) -> str:
     """Get prompt for unsolicited message."""
     inspirational_thought = f"""
-    *{ai_prefix} then drew on their past experiences and relationships with {human_prefix} and continued the conversation*
-
-    {ai_prefix}:
-    """
+    *{ai_prefix} then drew on their past experiences with {human_prefix} and continued the conversation*"""
 
     return dedent(inspirational_thought)
 
@@ -32,11 +29,11 @@ def generate_unsolicited_message(
 ) -> str:
     """Generate AI message without message from user."""
 
-    _, _, prefix, suffix = format_prompt_components_without_tools(
+    ai_prefix, _, prefix, suffix = format_prompt_components_without_tools(
         ai_settings, contact_settings
     )
 
-    prompt = "\n".join([prefix, suffix, prompt]).format(
+    prompt = "\n".join([prefix, suffix, prompt, "", f"{ai_prefix}:"]).format(
         chat_history=agent.memory.buffer
     )
     llm = OpenAI(temperature=temperature)
