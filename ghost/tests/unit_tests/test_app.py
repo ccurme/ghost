@@ -20,7 +20,9 @@ class TestAppUnits(TestApp):
         incoming_message: str,
         reply: str,
     ):
-        response, mock_twilio_client = self._post_llm_reply(incoming_number, incoming_message)
+        response, mock_twilio_client = self._post_llm_reply(
+            incoming_number, incoming_message
+        )
         self.assertEqual(200, response.status_code)
         self.assertEqual(MESSAGE_SID, response.text)
         expected_call = {

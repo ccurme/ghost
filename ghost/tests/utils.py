@@ -51,7 +51,9 @@ class TestApp(unittest.TestCase):
             "Body": incoming_message,
             "From": incoming_number,
         }
-        response = self.app.post("/llm_reply", data=data, content_type="multipart/form-data")
+        response = self.app.post(
+            "/llm_reply", data=data, content_type="multipart/form-data"
+        )
 
         return response, mock_twilio_client
 
