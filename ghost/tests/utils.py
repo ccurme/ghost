@@ -68,7 +68,6 @@ class TestApp(unittest.TestCase):
         with app.test_request_context():
             app.config["SECRET_KEY"] = "secret"
             access_token = create_access_token(identity=123)
-            app.config["SECRET_KEY"] = None
         headers = {"Authorization": f"Bearer {access_token}"}
         response = self.app.post(
             "/unsolicited_message",
