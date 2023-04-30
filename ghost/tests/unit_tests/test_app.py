@@ -75,3 +75,11 @@ class TestAppUnits(TestApp):
         self.assertEqual("Invalid request.", response.text)
         initialize_agent.assert_not_called()
         mock_twilio_client.messages.create.assert_not_called()
+
+    def test_login(self):
+        app.app.config["SECRET_KEY"] = "secret"
+        result = self.app.post("/login", data={"secret_key": "secret"})
+        self.assertIsInstance(result.json["access_token"], str)
+        result = self.app.post("/login", data={"secret_key": ""})
+        self.assertDictEqual({}, result.json)
+        app.app.config["SECRET_KEY"] = None
