@@ -35,7 +35,7 @@ class TestApp(unittest.TestCase):
 
     @patch("app.RequestValidator")
     @patch("app._make_twilio_client")
-    def _post_sms(
+    def _post_llm_reply(
         self,
         incoming_number: str,
         incoming_message: str,
@@ -51,7 +51,7 @@ class TestApp(unittest.TestCase):
             "Body": incoming_message,
             "From": incoming_number,
         }
-        response = self.app.post("/sms", data=data, content_type="multipart/form-data")
+        response = self.app.post("/llm_reply", data=data, content_type="multipart/form-data")
 
         return response, mock_twilio_client
 

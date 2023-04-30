@@ -20,7 +20,7 @@ class TestAppUnits(TestApp):
         incoming_message: str,
         reply: str,
     ):
-        response, mock_twilio_client = self._post_sms(incoming_number, incoming_message)
+        response, mock_twilio_client = self._post_llm_reply(incoming_number, incoming_message)
         self.assertEqual(200, response.status_code)
         self.assertEqual(MESSAGE_SID, response.text)
         expected_call = {
@@ -60,7 +60,7 @@ class TestAppUnits(TestApp):
 
     @patch("app.initialize_agent")
     def test_unknown_number(self, initialize_agent):
-        response, mock_twilio_client = self._post_sms("+18001111111", "Hi")
+        response, mock_twilio_client = self._post_llm_reply("+18001111111", "Hi")
         self.assertEqual(200, response.status_code)
         self.assertEqual("Unknown number.", response.text)
         initialize_agent.assert_not_called()
@@ -75,7 +75,7 @@ class TestAppUnits(TestApp):
 
     @patch("app.initialize_agent")
     def test_invalid_request(self, initialize_agent):
-        response, mock_twilio_client = self._post_sms(
+        response, mock_twilio_client = self._post_llm_reply(
             "+18001234567", "Hi", valid_request=False
         )
         self.assertEqual(200, response.status_code)

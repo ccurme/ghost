@@ -29,13 +29,13 @@ class TestAppWithLLM(TestApp):
 
         return message
 
-    def test_sms(self):
+    def test_llm_reply(self):
         incoming_number = "+18001234567"
         color = "green"
         print_text(f"\n{incoming_number}:", color=color)
         incoming_message = "Hey Ghost"
         print_text(f"\nReceived: {incoming_message}", color=color)
-        response, mock_twilio_client = self._post_sms(
+        response, mock_twilio_client = self._post_llm_reply(
             incoming_number,
             incoming_message,
         )
@@ -45,7 +45,7 @@ class TestAppWithLLM(TestApp):
 
         incoming_message = "Where are you right now?"
         print_text(f"\nReceived: {incoming_message}", color=color)
-        response, mock_twilio_client = self._post_sms(
+        response, mock_twilio_client = self._post_llm_reply(
             incoming_number,
             incoming_message,
         )
@@ -56,7 +56,7 @@ class TestAppWithLLM(TestApp):
 
         incoming_message = "Can you remind me your favorite food?"
         print_text(f"\nReceived: {incoming_message}", color=color)
-        response, mock_twilio_client = self._post_sms(
+        response, mock_twilio_client = self._post_llm_reply(
             incoming_number,
             incoming_message,
         )
@@ -71,7 +71,7 @@ class TestAppWithLLM(TestApp):
         print_text(f"\n{incoming_number}:", color=color)
         incoming_message = "hey"
         print_text(f"\nReceived: {incoming_message}", color=color)
-        response, mock_twilio_client = self._post_sms(
+        response, mock_twilio_client = self._post_llm_reply(
             incoming_number,
             incoming_message,
         )
@@ -86,7 +86,7 @@ class TestAppWithLLM(TestApp):
         print_text(f"\n{incoming_number}:", color=color)
         incoming_message = "read back what I just asked you"
         print_text(f"\nReceived: {incoming_message}", color=color)
-        response, mock_twilio_client = self._post_sms(
+        response, mock_twilio_client = self._post_llm_reply(
             incoming_number,
             incoming_message,
         )

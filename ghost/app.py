@@ -56,8 +56,8 @@ def _validate_number_and_get_agent(
         return agent_executor
 
 
-@app.route("/sms", methods=["POST"])
-def sms():
+@app.route("/llm_reply", methods=["POST"])
+def llm_reply():
     """Receive message and send response."""
     if not _validate_twilio_request(request):
         return "Invalid request."
