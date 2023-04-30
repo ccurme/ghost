@@ -66,7 +66,9 @@ class TestAppUnits(TestApp):
         initialize_agent.assert_not_called()
         mock_twilio_client.messages.create.assert_not_called()
 
-        response, mock_twilio_client = self._post_unsolicited_message("+18001111111", "Ghost then said:")
+        response, mock_twilio_client = self._post_unsolicited_message(
+            "+18001111111", "Ghost then said:"
+        )
         self.assertEqual(200, response.status_code)
         self.assertEqual("Unknown number.", response.text)
         mock_twilio_client.messages.create.assert_not_called()
