@@ -1,3 +1,4 @@
+from textwrap import dedent
 import unittest
 
 from langchain.input import print_text
@@ -15,10 +16,17 @@ class TestUnsolicitedMessage(unittest.TestCase):
         agent = initialize_agent(ai_settings, contact_settings)
         _ = agent.run("Hi, how are you?")
 
+        ai_prefix = ai_settings["name"]
+        human_prefix = contact_settings["name"]
+        prompt = unsolicited_message.get_unsolicited_message_prompt(
+            ai_prefix, human_prefix
+        )
+
         message = unsolicited_message.generate_unsolicited_message(
+            prompt,
+            agent,
             ai_settings,
             contact_settings,
-            agent,
         )
         self.assertEqual(3, len(agent.memory.chat_memory.messages))
         message_1, message_2, message_3 = agent.memory.chat_memory.messages
@@ -30,4 +38,37 @@ class TestUnsolicitedMessage(unittest.TestCase):
         _ = agent.run("Sorry, can you repeat what you just said?")
         self.assertEqual(5, len(agent.memory.chat_memory.messages))
 
+        prompt = dedent(
+            f"""
+        *{ai_prefix} then took the conversation in an entirely new direction with a random question:*
+        """
+        )
+        _ = unsolicited_message.generate_unsolicited_message(
+            prompt,
+            agent,
+            ai_settings,
+            contact_settings,
+            temperature=0.7,
+        )
+
+        print_text(f"\n{agent.memory.buffer}", color="green")
+
+        # Test first message
+        print_text("\n\n")
+        print_text(
+            "Test we get a reasonable message if we message first:", color="green"
+        )
+        agent = initialize_agent(ai_settings, contact_settings)
+        prompt = dedent(
+            f"""
+        *{ai_prefix} sent a joke to {human_prefix}:*
+        """
+        )
+        _ = unsolicited_message.generate_unsolicited_message(
+            prompt,
+            agent,
+            ai_settings,
+            contact_settings,
+            temperature=0.7,
+        )
         print_text(f"\n{agent.memory.buffer}", color="green")
