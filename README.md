@@ -16,6 +16,11 @@ Start server:
 TWILIO_ACCOUNT_SID=... TWILIO_AUTH_TOKEN=... OPENAI_API_KEY=... URL=... flask run
 ```
 
+Ghost has three endpoints:
+* `/llm_reply`: configuring a Twilio SMS webhook to this endpoint will produce replies for inbound messages from known contacts (those in [contacts.json](ghost/settings/contacts.json)).
+* `/llm_send`: this endpoint will send an unsolicited message to a known contact following a given input prompt (requires authentication).
+* `/login`: this endpoint can produce a token for use with `/llm_send`.
+
 ## Testing
 See [Makefile](Makefile) for testing, test coverage and linting.
 ### Unit tests:
