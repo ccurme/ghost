@@ -87,9 +87,9 @@ def llm_reply():
         return twliio_message.sid
 
 
-@app.route("/unsolicited_message", methods=["POST"])
+@app.route("/llm_send", methods=["POST"])
 @jwt_required()
-def unsolicited_message():
+def llm_send():
     """Send message."""
     twilio_client = _make_twilio_client()
     prompt = request.values["prompt"]

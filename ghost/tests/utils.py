@@ -70,7 +70,7 @@ class TestApp(unittest.TestCase):
             access_token = create_access_token(identity=123)
         headers = {"Authorization": f"Bearer {access_token}"}
         response = self.app.post(
-            "/unsolicited_message",
+            "/llm_send",
             data=data,
             content_type="multipart/form-data",
             headers=headers,
