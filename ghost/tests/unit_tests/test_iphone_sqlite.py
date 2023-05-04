@@ -4,10 +4,10 @@ import unittest
 
 import pandas as pd
 
-from fine_tuning import sqlite
+from fine_tuning import iphone_sqlite
 
 
-class TestSqlite(unittest.TestCase):
+class TestIPhoneSqlite(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.connection = sqlite3.connect(":memory:")
@@ -84,7 +84,7 @@ class TestSqlite(unittest.TestCase):
         cls.connection.close()
 
     def test_pull_messages_for_contact_number(self):
-        result = sqlite.pull_messages_for_contact_number(
+        result = iphone_sqlite.pull_messages_for_contact_number(
             self.connection, "+18001234567"
         )
         _ = result["message_datetime"].apply(datetime.fromisoformat)  # check iso-format
@@ -94,7 +94,7 @@ class TestSqlite(unittest.TestCase):
             ["+18001234567", "+18001234567"], result["chat_identifier"].to_list()
         )
 
-        result = sqlite.pull_messages_for_contact_number(
+        result = iphone_sqlite.pull_messages_for_contact_number(
             self.connection, "+18005555555"
         )
         _ = result["message_datetime"].apply(datetime.fromisoformat)
