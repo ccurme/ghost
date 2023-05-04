@@ -25,6 +25,8 @@ class TestIPhoneSqlite(unittest.TestCase):
                 {"message_id": 2, "chat_id": 2},
                 {"message_id": 3, "chat_id": 1},
                 {"message_id": 4, "chat_id": 2},
+                {"message_id": 5, "chat_id": 2},
+                {"message_id": 6, "chat_id": 1},
             ]
         )
         cls.chat_message_join.to_sql(name="chat_message_join", con=cls.connection)
@@ -57,6 +59,20 @@ class TestIPhoneSqlite(unittest.TestCase):
                     "date": 232732551000000000,
                     "message_date": 232732551000000000,
                     "text": "hi dear",
+                    "is_from_me": 1,
+                },
+                {
+                    "ROWID": 5,
+                    "date": 232733442000000000,
+                    "message_date": 232733442000000000,
+                    "text": "Emphasized an image",
+                    "is_from_me": 0,
+                },
+                {
+                    "ROWID": 6,
+                    "date": 232734161000000000,
+                    "message_date": 232734161000000000,
+                    "text": "Loved an image",
                     "is_from_me": 1,
                 },
             ]

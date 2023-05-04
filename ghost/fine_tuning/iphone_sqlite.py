@@ -25,7 +25,9 @@ def pull_messages_for_contact_number(
     """
     df = pd.read_sql(query, connection, params=(contact_number,))
     df = df[
-        (df["text"] != "Laughed at an image") & (df["text"] != "Loved an image")
+        ~df["text"].isin(
+            ["Laughed at an image", "Loved an image", "Emphasized an image"]
+        )
     ].reset_index(drop=True)
 
     return df
