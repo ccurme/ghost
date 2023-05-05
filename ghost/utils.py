@@ -4,7 +4,7 @@ from typing import Tuple
 
 from langchain.text_splitter import Document
 
-from prompt import CONVERSATION_HISTORY, INTRO_TO_CHAT_PARTNER
+from prompt import CONVERSATION_HISTORY, FINE_TUNE_CONVERSATION_HISTORY, INTRO_TO_CHAT_PARTNER
 
 
 def _stringify_list(input_list):
@@ -15,7 +15,7 @@ def _stringify_list(input_list):
 
 
 def format_prompt_components_without_tools(
-    ai_settings: dict, contact_settings: dict
+    ai_settings: dict, contact_settings: dict, fine_tune: bool = False,
 ) -> Tuple[str]:
     """Format prompt components but for tools."""
     ai_prefix = ai_settings["name"]
@@ -36,7 +36,10 @@ def format_prompt_components_without_tools(
     {intro_to_chat_partner}
     """
     prefix = prefix.replace("\t", "").replace("    ", "")
-    suffix = CONVERSATION_HISTORY
+    if fine_tune:
+        suffix = FINE_TUNE_CONVERSATION_HISTORY
+    else:
+        suffix = CONVERSATION_HISTORY
 
     return ai_prefix, human_prefix, prefix, suffix
 
