@@ -61,22 +61,21 @@ def collect_samples(
 
     Returns: None
     """
-    if random_state:
+    if random_state is not None:
         np.random.seed(random_state)
     n_rows = message_df.shape[0]
+    max_chunk = min(max_chunk, n_rows - 1)
     samples = 0
-    iterations = 0
     while samples < num_samples:
 
-        chunk_size = np.random.randint(
+        conversation_size = np.random.randint(
             min_chunk + 1, max_chunk + 2
-        )  # add last row for completion
-        start_index = np.random.randint(n_rows - (chunk_size + 1))
-        sample_df = message_df.iloc[start_index : (start_index + chunk_size)]
+        )  # including completion
+        start_index = np.random.randint(n_rows - conversation_size + 1)
+        sample_df = message_df.iloc[start_index : (start_index + conversation_size)]
         if (sample_df["is_from_me"].iloc[-1] == 1) & (
             sample_df["is_from_me"].nunique() == 2
         ):
-            iterations = iterations + 1
             _render_conversation(sample_df)
             print_text("")
             print_text(
