@@ -1,4 +1,5 @@
 """Script to sample records for a given contact."""
+import contextlib
 import json
 import os
 import sqlite3
@@ -81,8 +82,8 @@ def main(
     ai_settings, contacts = load_settings()
     contact_settings = _get_contact_settings_from_contacts(contacts, contact_number)
     _touch(path_to_output_records)
-    connection = sqlite3.connect(path_to_sqlite_db)
-    message_df = pull_messages_for_contact_number(connection, contact_number)
+    with contextlib.closing(sqlite3.connect(path_to_sqlite_db)) as connection:
+        message_df = pull_messages_for_contact_number(connection, contact_number)
 
     # Collect samples
     with open(path_to_output_records, "a") as fp:
