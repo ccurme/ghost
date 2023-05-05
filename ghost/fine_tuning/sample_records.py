@@ -1,14 +1,11 @@
 """Script to sample records for a given contact."""
-import argparse
 import json
 import os
 import sqlite3
-import sys
 from typing import List
 
 import pandas as pd
 
-sys.path.append("..")
 from fine_tuning.iphone_sqlite import pull_messages_for_contact_number
 from fine_tuning.sampling_utils import (
     collect_samples,
@@ -93,21 +90,4 @@ def main(
 
     _read_records_and_write_training_data(
         ai_settings, contact_settings, path_to_output_records, path_to_output_train_data
-    )
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Generate and preview sample records for a contact."
-    )
-    parser.add_argument("--path_to_sqlite_db")
-    parser.add_argument("--contact_number")
-    parser.add_argument("--path_to_output_records")
-    parser.add_argument("--path_to_output_train_data")
-    args = parser.parse_args()
-    main(
-        args.path_to_sqlite_db,
-        args.contact_number,
-        args.path_to_output_records,
-        args.path_to_output_train_data,
     )
