@@ -1,4 +1,3 @@
-"""Script to sample records for a given contact."""
 import contextlib
 import json
 import os
