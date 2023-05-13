@@ -31,6 +31,13 @@ def _render_conversation(df: pd.DataFrame) -> None:
     print_text("\n".join(messages))
 
 
+def dump_jsonl(records: List[dict], file_path: str) -> None:
+    """Dump to .jsonl file."""
+    with open(file_path, "w") as fp:
+        for record in records:
+            fp.write(f"{json.dumps(record)}\n")
+
+
 def load_jsonl(file_path: str) -> List[dict]:
     """Load .jsonl file."""
     records = []
