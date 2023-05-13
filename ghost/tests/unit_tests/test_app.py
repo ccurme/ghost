@@ -34,8 +34,8 @@ class TestAppUnits(TestApp):
 
     @patch("app.initialize_agent")
     def test_agent_management(self, initialize_agent):
-        app.AGENT_CACHE = {}
-        self.assertEqual(0, len(app.AGENT_CACHE))
+        app.MODEL_CACHE = {}
+        self.assertEqual(0, len(app.MODEL_CACHE))
         reply = "Hello"
         initialize_agent.return_value = _make_mock_agent(reply)
         self._post_request_and_test(
@@ -44,21 +44,21 @@ class TestAppUnits(TestApp):
             reply,
         )
         initialize_agent.assert_called_once()
-        self.assertEqual(1, len(app.AGENT_CACHE))
+        self.assertEqual(1, len(app.MODEL_CACHE))
         self._post_request_and_test(
             "+18001234567",
             "How are you?",
             reply,
         )
         initialize_agent.assert_called_once()
-        self.assertEqual(1, len(app.AGENT_CACHE))
+        self.assertEqual(1, len(app.MODEL_CACHE))
         self._post_request_and_test(
             "+18005555555",
             "Hi",
             reply,
         )
         self.assertEqual(2, initialize_agent.call_count)
-        self.assertEqual(2, len(app.AGENT_CACHE))
+        self.assertEqual(2, len(app.MODEL_CACHE))
 
     @patch("app.initialize_agent")
     def test_unknown_number(self, initialize_agent):
