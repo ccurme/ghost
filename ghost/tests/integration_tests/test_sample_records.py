@@ -31,13 +31,15 @@ class TestSampleRecords(unittest.TestCase):
         cls.contact_number = "+18001234567"
         cls.sqlite_db = ":memory:"
         cls.path_to_output_records = os.path.join(cls.output_folder, "records.jsonl")
-        cls.path_to_output_train_data = os.path.join(cls.output_folder, "train_records.jsonl")
+        cls.path_to_output_train_data = os.path.join(
+            cls.output_folder, "train_records.jsonl"
+        )
         os.mkdir(cls.output_folder)
 
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree(cls.output_folder)
-    
+
     def _reset(self):
         self.tearDownClass()
         self.setUpClass()
@@ -60,11 +62,11 @@ class TestSampleRecords(unittest.TestCase):
         # Test that we raise before overwriting.
         with self.assertRaises(ValueError):
             sample_records.main(
-            self.sqlite_db,
-            self.contact_number,
-            self.path_to_output_records,
-            self.path_to_output_train_data,
-        )
+                self.sqlite_db,
+                self.contact_number,
+                self.path_to_output_records,
+                self.path_to_output_train_data,
+            )
 
         # Test records are as expected
         self._reset()

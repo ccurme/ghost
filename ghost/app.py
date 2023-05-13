@@ -51,7 +51,9 @@ def _validate_number_and_get_model(
             model = MODEL_CACHE[chat_partner_phone_number]
         else:
             if ai_settings["fine_tuned_model_name"]:
-                model = initialize_chain(ai_settings, contacts[chat_partner_phone_number])
+                model = initialize_chain(
+                    ai_settings, contacts[chat_partner_phone_number]
+                )
                 model.verbose = VERBOSE_PROMPT
             else:
                 model = initialize_agent(
