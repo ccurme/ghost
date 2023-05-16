@@ -8,6 +8,7 @@ from langchain.memory import ConversationBufferMemory
 import openai
 
 from fine_tuning.sampling_utils import STOP_SEQUENCE
+from unsolicited_message import extract_first_message
 from utils import format_prompt_components_without_tools
 
 
@@ -41,7 +42,8 @@ class FineTunedLLM(LLM):
         if not result.choices:
             raise AssertionError("Invalid result from OpenAI API request.")
         response = result.choices[0]["text"].strip()
-        return response
+
+        return extract_first_message(response)
 
     @property
     def _identifying_params(self) -> Mapping[str, Any]:
