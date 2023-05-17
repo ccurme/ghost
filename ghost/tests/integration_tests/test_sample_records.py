@@ -7,7 +7,7 @@ import uuid
 import pandas as pd
 
 from fine_tuning import sample_records
-from fine_tuning.sampling_utils import load_jsonl
+from fine_tuning.sampling_utils import dump_jsonl, load_jsonl
 
 
 MESSAGE_DF = pd.DataFrame.from_records(
@@ -47,6 +47,7 @@ class TestSampleRecords(unittest.TestCase):
     @patch("fine_tuning.sampling_utils.input")
     @patch("fine_tuning.sample_records.pull_messages_for_contact_number")
     def test_sample_records(self, pull_messages, user_input):
+        self._reset()
         pull_messages.return_value = MESSAGE_DF.copy()
         user_input.side_effect = ["n", "n", "q"]
         sample_records.main(
@@ -110,3 +111,10 @@ class TestSampleRecords(unittest.TestCase):
                 self.path_to_output_records,
                 self.path_to_output_train_data,
             )
+
+    def test_jsonl_serialization(self):
+        self._reset()
+        records = [{"field_aa": "aa", "field_ab": "ab"}, {"field_ba": "ba", "field_bb": "bb"}]
+        dump_jsonl(records, self.path_to_output_records)
+        loaded_records = load_jsonl(self.path_to_output_records)
+        self.assertEqual(records, loaded_records)

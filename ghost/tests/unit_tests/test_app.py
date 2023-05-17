@@ -1,8 +1,9 @@
-from typing import Any, Callable
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import app
 from tests.utils import MESSAGE_SID, TestApp
+from utils import load_settings
 
 
 def _make_mock_agent(response: str) -> Any:
@@ -84,6 +85,25 @@ class TestAppUnits(TestApp):
         self.assertEqual("Invalid request.", response.text)
         initialize_agent.assert_not_called()
         mock_twilio_client.messages.create.assert_not_called()
+
+    @patch("fine_tuning.inference.openai.Completion.create")
+    @patch("app.load_settings")
+    def test_fine_tuned_model(self, settings, create):
+        app.MODEL_CACHE = {}
+        self.assertEqual(0, len(app.MODEL_CACHE))
+
+        mock_response = MagicMock()
+        mock_response.choices = [{"text": "test response"}]
+        create.return_value = mock_response
+        ai_settings, contacts = load_settings()
+        ai_settings["fine_tuned_model_name"] = "curie:ft-personal:test-2023-04-30-15-32-03"
+        settings.return_value = (ai_settings, contacts)
+
+        self._post_request_and_test(
+            "+18001234567",
+            "Hey Ghost",
+            "test response",
+        )
 
     def test_login(self):
         app.app.config["SECRET_KEY"] = "secret"
