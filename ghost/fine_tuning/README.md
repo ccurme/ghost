@@ -18,3 +18,6 @@ This workflow is set up in a [Jupyter notebook](notebooks/sample_records.ipynb),
 * `path_to_output_train_data`: path to which to write a .jsonl file of training data for OpenAI. Ghost will format the conversations into prompts and completions using the information in [prompt_prefix.md](../settings/prompt_prefix.md) and [contacts.json](../settings/contacts.json).
 
 ## Fine-tuning a model
+The train data output by the above sampling step is of the format expected by OpenAI's fine tuning endpoints. We provide a [sample notebook](notebooks/fine_tune.ipynb) to illustrate how .jsonl files sampled from different contacts can be concatenated and uploaded to the [fine-tunes/create](https://platform.openai.com/docs/api-reference/fine-tunes/create) endpoint. N.B. OpenAI's [documentation](https://platform.openai.com/docs/guides/fine-tuning) includes helpful hints on fine tuning for the purpose of creating a conversational chat application, such as using fewer epochs and a smaller learning rate.
+
+Once your model is created, updating the `"fine_tuned_model_name"` field in [contacts.json](../settings/contacts.json) to the model's `fine_tuned_model` field configures the application to route messages through the fine tuned model.
