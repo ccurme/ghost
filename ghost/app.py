@@ -1,12 +1,15 @@
 import logging
 import os
+from typing import Optional
 
 from flask import Flask, Request, request
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from langchain.schema import BaseModel
 from twilio.request_validator import RequestValidator
 from twilio.rest import Client
 
 from agent_utils import initialize_agent
+from fine_tuning.inference import initialize_chain
 from unsolicited_message import generate_unsolicited_message
 from utils import load_settings
 
@@ -20,7 +23,7 @@ LOGLEVEL = 25  # Above info
 logging.basicConfig(level=LOGLEVEL)
 logger = logging.getLogger(__name__)
 
-AGENT_CACHE = {}
+MODEL_CACHE = {}
 VERBOSE_PROMPT = os.environ.get("VERBOSE_PROMPT", "False").lower() in ("true", "1")
 
 
@@ -37,23 +40,29 @@ def _validate_twilio_request(request: Request) -> bool:
     return validator.validate(URL, request.values, twilio_signature)
 
 
-def _validate_number_and_get_agent(
+def _validate_number_and_get_model(
     chat_partner_phone_number: str, ai_settings: dict, contacts: dict
-):
-    """Validate phone number for chat partner and retrieve or initialize agent."""
+) -> Optional[BaseModel]:
+    """Validate phone number for chat partner and retrieve or initialize model."""
     if chat_partner_phone_number not in contacts:
         return None
     else:
-        if chat_partner_phone_number in AGENT_CACHE:
-            agent_executor = AGENT_CACHE[chat_partner_phone_number]
+        if chat_partner_phone_number in MODEL_CACHE:
+            model = MODEL_CACHE[chat_partner_phone_number]
         else:
-            agent_executor = initialize_agent(
-                ai_settings, contacts[chat_partner_phone_number]
-            )
-            agent_executor.agent.llm_chain.verbose = VERBOSE_PROMPT
-            AGENT_CACHE[chat_partner_phone_number] = agent_executor
+            if ai_settings["fine_tuned_model_name"]:
+                model = initialize_chain(
+                    ai_settings, contacts[chat_partner_phone_number]
+                )
+                model.verbose = VERBOSE_PROMPT
+            else:
+                model = initialize_agent(
+                    ai_settings, contacts[chat_partner_phone_number]
+                )
+                model.agent.llm_chain.verbose = VERBOSE_PROMPT
+            MODEL_CACHE[chat_partner_phone_number] = model
 
-        return agent_executor
+        return model
 
 
 @app.route("/llm_reply", methods=["POST"])
@@ -69,13 +78,13 @@ def llm_reply():
     contacts = {
         contact.pop("phone_number"): contact for contact in contacts
     }  # key contacts by phone number
-    agent_executor = _validate_number_and_get_agent(
+    model = _validate_number_and_get_model(
         chat_partner_phone_number, ai_settings, contacts
     )
-    if agent_executor is None:
+    if model is None:
         return "Unknown number."
     else:
-        response = agent_executor.run(incoming_message)
+        response = model.run(incoming_message)
 
         twliio_message = twilio_client.messages.create(
             body=response,
@@ -97,16 +106,16 @@ def llm_send():
 
     ai_settings, contacts = load_settings()
     contacts = {contact.pop("phone_number"): contact for contact in contacts}
-    agent_executor = _validate_number_and_get_agent(
+    model = _validate_number_and_get_model(
         chat_partner_phone_number, ai_settings, contacts
     )
-    if agent_executor is None:
+    if model is None:
         return "Unknown number."
     else:
         contact_settings = contacts[chat_partner_phone_number]
         message = generate_unsolicited_message(
             prompt,
-            agent_executor,
+            model,
             ai_settings,
             contact_settings,
             temperature=0.7,

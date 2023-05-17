@@ -30,6 +30,11 @@ Begin!
 Previous conversation history:
 {chat_history}"""
 
+FINE_TUNE_CONVERSATION_HISTORY = """Begin!
+
+Previous conversation history:
+{chat_history}"""
+
 SUFFIX = """
 {human_prefix}: {{input}}
 {{agent_scratchpad}}"""

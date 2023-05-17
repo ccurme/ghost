@@ -6,7 +6,8 @@
         "facts": [
             "Puts his socks on before his pants",
             "Favorite food: shrimp"
-        ]
+        ],
+        "fine_tuned_model_name": null
     },
     [
         {

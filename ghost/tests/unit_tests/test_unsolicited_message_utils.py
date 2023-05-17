@@ -11,9 +11,9 @@ class TestUnsolicitedMessageUtils(unittest.TestCase):
         Marcos: Yeah, I remember, good times.
         """
         message = dedent(message.strip())
-        result = unsolicited_message._extract_first_message(message)
+        result = unsolicited_message.extract_first_message(message)
         self.assertEqual("Remember when we went to the shrimp restaurant?", result)
 
         message = "so what else is new?"
-        result = unsolicited_message._extract_first_message(message)
+        result = unsolicited_message.extract_first_message(message)
         self.assertEqual(message, result)
