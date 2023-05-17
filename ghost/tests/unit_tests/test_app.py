@@ -96,7 +96,9 @@ class TestAppUnits(TestApp):
         mock_response.choices = [{"text": "test response"}]
         create.return_value = mock_response
         ai_settings, contacts = load_settings()
-        ai_settings["fine_tuned_model_name"] = "curie:ft-personal:test-2023-04-30-15-32-03"
+        ai_settings[
+            "fine_tuned_model_name"
+        ] = "curie:ft-personal:test-2023-04-30-15-32-03"
         settings.return_value = (ai_settings, contacts)
 
         self._post_request_and_test(

@@ -114,7 +114,10 @@ class TestSampleRecords(unittest.TestCase):
 
     def test_jsonl_serialization(self):
         self._reset()
-        records = [{"field_aa": "aa", "field_ab": "ab"}, {"field_ba": "ba", "field_bb": "bb"}]
+        records = [
+            {"field_aa": "aa", "field_ab": "ab"},
+            {"field_ba": "ba", "field_bb": "bb"},
+        ]
         dump_jsonl(records, self.path_to_output_records)
         loaded_records = load_jsonl(self.path_to_output_records)
         self.assertEqual(records, loaded_records)
