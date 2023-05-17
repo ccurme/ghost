@@ -7,7 +7,7 @@ iPhones store text message data in a built-in SQLite database. If you generate a
 The SQLite database is contained in this backup with a filename of `3d0d7e5fb2ce288813306e4d4636395e047a3d28`. It may be located inside a subfolder `3d/`. You can copy this file before sampling messages and fine-tuning.
 
 ## Sampling text message data
-Ghost provides functionality to extract snippet of conversations from your text message history and renders them for review. You can inspect each snippet before accepting or rejecting it from the training data, to ensure no sensitive information is uploaded to third party servers.
+Ghost provides functionality to extract snippets of conversations from your text message history and render them for review. You can inspect each snippet before accepting or rejecting it from the training data, to ensure no sensitive information is uploaded to third party servers.
 
 ![Sample and preview training records for a given contact](https://github.com/ccurme/ghost/assets/26529506/6a2bf481-ce48-4da8-8d11-44f1c2a45830)
 
