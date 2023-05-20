@@ -17,6 +17,7 @@ Start server:
 ```
 TWILIO_ACCOUNT_SID=... TWILIO_AUTH_TOKEN=... OPENAI_API_KEY=... URL=... flask run
 ```
+or build and run using the [Dockerfile](Dockerfile).
 
 Ghost has three endpoints:
 * `/llm_reply`: configuring a Twilio SMS webhook to this endpoint will produce replies for inbound messages from known contacts (those in [contacts.json](ghost/settings/contacts.json)).
