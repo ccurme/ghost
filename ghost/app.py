@@ -82,6 +82,7 @@ def llm_reply():
         chat_partner_phone_number, ai_settings, contacts
     )
     if model is None:
+        logger.log(LOGLEVEL, f"Number not in contacts: {chat_partner_phone_number}")
         return "Unknown number."
     else:
         response = model.run(incoming_message)
