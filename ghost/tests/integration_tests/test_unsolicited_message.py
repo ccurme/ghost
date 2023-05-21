@@ -2,7 +2,7 @@ from textwrap import dedent
 import unittest
 
 from langchain.input import print_text
-from langchain.schema import AIMessage, HumanMessage
+from langchain.schema import AIMessage, HumanMessage, get_buffer_string
 
 from agent_utils import initialize_agent
 import unsolicited_message
@@ -51,12 +51,17 @@ class TestUnsolicitedMessage(unittest.TestCase):
             temperature=0.7,
         )
 
-        print_text(f"\n{agent.memory.buffer}", color="green")
+        buffer_string = get_buffer_string(
+            agent.memory.buffer,
+            ai_prefix=agent.memory.ai_prefix,
+            human_prefix=agent.memory.human_prefix,
+        )
+        print_text(buffer_string, color="green")
 
         # Test first message
         print_text("\n\n")
         print_text(
-            "Test we get a reasonable message if we message first:", color="green"
+            "Test we get a reasonable message if we message first:\n", color="green"
         )
         agent = initialize_agent(ai_settings, contact_settings)
         prompt = dedent(
@@ -71,4 +76,9 @@ class TestUnsolicitedMessage(unittest.TestCase):
             contact_settings,
             temperature=0.7,
         )
-        print_text(f"\n{agent.memory.buffer}", color="green")
+        buffer_string = get_buffer_string(
+            agent.memory.buffer,
+            ai_prefix=agent.memory.ai_prefix,
+            human_prefix=agent.memory.human_prefix,
+        )
+        print_text(buffer_string, color="green")
