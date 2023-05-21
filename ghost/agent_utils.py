@@ -4,13 +4,16 @@ from langchain import OpenAI
 from langchain.agents.agent import AgentExecutor
 from langchain.agents.conversational.base import ConversationalAgent
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferWindowMemory
 from langchain.text_splitter import Document
 from langchain.tools.vectorstore.tool import VectorStoreQATool
 from langchain.vectorstores import FAISS
 
 from prompt import CONVERSATION_HISTORY, FORMAT_INSTRUCTIONS, INTRO_TO_TOOLS, SUFFIX
 from utils import format_prompt_components_without_tools
+
+
+AGENT_MEMORY_WINDOW = 20
 
 
 def _make_qa_tool(ai_name: str, documents: List[Document]):
@@ -60,8 +63,11 @@ def initialize_agent(ai_settings: dict, contact_settings: dict) -> AgentExecutor
     )
     verbose = False
     llm = OpenAI(temperature=0, verbose=verbose)
-    memory = ConversationBufferMemory(
-        memory_key="chat_history", human_prefix=human_prefix, ai_prefix=ai_prefix
+    memory = ConversationBufferWindowMemory(
+        memory_key="chat_history",
+        human_prefix=human_prefix,
+        ai_prefix=ai_prefix,
+        k=AGENT_MEMORY_WINDOW,
     )
     qa_tool = _make_qa_tool(ai_prefix, ai_settings["facts"])
     tools = [qa_tool]

@@ -1,7 +1,9 @@
+import json
 from typing import Any
 from unittest.mock import MagicMock, patch
 
 import app
+from fine_tuning.inference import MEMORY_WINDOW
 from tests.utils import MESSAGE_SID, TestApp
 from utils import load_settings
 
@@ -106,6 +108,31 @@ class TestAppUnits(TestApp):
             "Hey Ghost",
             "test response",
         )
+
+        # Test memory window
+        num_extended_messages = 3
+        for iteration in range(MEMORY_WINDOW + num_extended_messages):
+            self._post_request_and_test(
+                "+18005555555",
+                str(iteration),
+                "test response",
+            )
+        memories = self._post_llm_memory()
+        memory_dict = json.loads(memories.data)
+        self.assertSetEqual(
+            set(["+18001234567", "+18005555555"]), set(memory_dict.keys())
+        )
+        self.assertEqual(
+            "Marcos: Hey Ghost\nGhost: test response", memory_dict["+18001234567"]
+        )
+        messages = memory_dict["+18005555555"].split("\n")
+        self.assertEqual(2 * MEMORY_WINDOW, len(messages))
+        self.assertEqual(f"Daisy: {num_extended_messages}", messages[0])
+        self.assertEqual("Ghost: test response", messages[1])
+        self.assertEqual(
+            f"Daisy: {MEMORY_WINDOW + num_extended_messages - 1}", messages[-2]
+        )
+        self.assertEqual("Ghost: test response", messages[-1])
 
     def test_login(self):
         app.app.config["SECRET_KEY"] = "secret"

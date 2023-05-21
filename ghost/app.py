@@ -1,3 +1,5 @@
+from copy import deepcopy
+import json
 import logging
 import os
 from typing import Optional
@@ -76,7 +78,7 @@ def llm_reply():
     logger.log(LOGLEVEL, f"Received {chat_partner_phone_number}: {incoming_message}")
     ai_settings, contacts = load_settings()
     contacts = {
-        contact.pop("phone_number"): contact for contact in contacts
+        contact.pop("phone_number"): contact for contact in deepcopy(contacts)
     }  # key contacts by phone number
     model = _validate_number_and_get_model(
         chat_partner_phone_number, ai_settings, contacts
@@ -130,6 +132,18 @@ def llm_send():
         logger.log(LOGLEVEL, f"Sent {chat_partner_phone_number}: {message}")
 
     return twliio_message.sid
+
+
+@app.route("/llm_memory", methods=["POST"])
+@jwt_required()
+def llm_memory():
+    """Return conversation histories."""
+    buffers = {
+        contact_number: model.memory.load_memory_variables({})["chat_history"]
+        for contact_number, model in MODEL_CACHE.items()
+    }
+
+    return json.dumps(buffers, indent=2)
 
 
 @app.route("/login", methods=["POST"])

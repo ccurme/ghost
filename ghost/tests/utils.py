@@ -79,3 +79,12 @@ class TestApp(unittest.TestCase):
         )
 
         return response, mock_twilio_client
+
+    def _post_llm_memory(self):
+        with app.test_request_context():
+            app.config["SECRET_KEY"] = "secret"
+            access_token = create_access_token(identity=123)
+        headers = {"Authorization": f"Bearer {access_token}"}
+        response = self.app.post("/llm_memory", headers=headers)
+
+        return response

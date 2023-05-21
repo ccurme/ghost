@@ -51,12 +51,13 @@ class TestUnsolicitedMessage(unittest.TestCase):
             temperature=0.7,
         )
 
-        print_text(f"\n{agent.memory.buffer}", color="green")
+        buffer_string = agent.memory.load_memory_variables({})["chat_history"]
+        print_text(f"\n{buffer_string}", color="green")
 
         # Test first message
         print_text("\n\n")
         print_text(
-            "Test we get a reasonable message if we message first:", color="green"
+            "Test we get a reasonable message if we message first:\n", color="green"
         )
         agent = initialize_agent(ai_settings, contact_settings)
         prompt = dedent(
@@ -71,4 +72,5 @@ class TestUnsolicitedMessage(unittest.TestCase):
             contact_settings,
             temperature=0.7,
         )
-        print_text(f"\n{agent.memory.buffer}", color="green")
+        buffer_string = agent.memory.load_memory_variables({})["chat_history"]
+        print_text(buffer_string, color="green")
