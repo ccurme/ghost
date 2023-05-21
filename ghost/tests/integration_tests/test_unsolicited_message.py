@@ -56,7 +56,7 @@ class TestUnsolicitedMessage(unittest.TestCase):
             ai_prefix=agent.memory.ai_prefix,
             human_prefix=agent.memory.human_prefix,
         )
-        print_text(buffer_string, color="green")
+        print_text(f"\n{buffer_string}", color="green")
 
         # Test first message
         print_text("\n\n")

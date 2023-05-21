@@ -1,7 +1,7 @@
 from textwrap import dedent
 
 from langchain import OpenAI
-from langchain.schema import BaseModel
+from langchain.schema import BaseModel, get_buffer_string
 
 from utils import format_prompt_components_without_tools
 
@@ -33,8 +33,13 @@ def generate_unsolicited_message(
         ai_settings, contact_settings
     )
 
+    buffer_string = get_buffer_string(
+        model.memory.buffer,
+        ai_prefix=model.memory.ai_prefix,
+        human_prefix=model.memory.human_prefix,
+    )
     prompt = "\n".join([prefix, suffix, prompt, "", f"{ai_prefix}:"]).format(
-        chat_history=model.memory.buffer
+        chat_history=buffer_string
     )
     llm = OpenAI(temperature=temperature)
     message = llm(prompt)
