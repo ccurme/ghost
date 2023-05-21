@@ -1,7 +1,7 @@
 # Ghost
 Create an AI replica of yourself that is accessible via SMS.
 
-Ghost allows you to chat with (1) a LLM that is fine-tuned on your text messages, or (2) [Langchain agent](https://python.langchain.com/en/latest/use_cases/personal_assistants.html) with a custom prompt that implements retrieval-augmented generation over a set of personal facts. For fine-tuning, Ghost provides functionality to sample and review text conversations from your iPhone, granting oversight of the training data. See [fine tuning README](ghost/fine_tuning/README.md) for details.
+Ghost allows you to chat with (1) a LLM that is fine-tuned on your text messages, or (2) a [Langchain agent](https://python.langchain.com/en/latest/use_cases/personal_assistants.html) with a custom prompt that implements retrieval-augmented generation over a set of personal facts. For fine-tuning, Ghost provides functionality to sample and review text conversations from your iPhone, granting oversight of the training data. See [fine tuning README](ghost/fine_tuning/README.md) for details.
 
 ## Configuration
 Ghost requires two configuration files to tailor your chat responses:
