@@ -127,7 +127,7 @@ class TestAppUnits(TestApp):
         )
         messages = memory_dict["+18005555555"].split("\n")
         self.assertEqual(2 * MEMORY_WINDOW, len(messages))
-        self.assertEqual("Daisy: 3", messages[0])
+        self.assertEqual(f"Daisy: {num_extended_messages}", messages[0])
         self.assertEqual("Ghost: test response", messages[1])
         self.assertEqual(
             f"Daisy: {MEMORY_WINDOW + num_extended_messages - 1}", messages[-2]
