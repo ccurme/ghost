@@ -1,7 +1,7 @@
 from textwrap import dedent
 
 from langchain import OpenAI
-from langchain.schema import BaseModel, get_buffer_string
+from langchain.schema import BaseModel
 
 from utils import format_prompt_components_without_tools
 
@@ -9,7 +9,7 @@ from utils import format_prompt_components_without_tools
 def extract_first_message(message: str) -> str:
     """The LLM can continue the conversation from the recipient. So extract just the first line."""
 
-    return message.split("\n")[0]
+    return message.split("\n")[0].strip()
 
 
 def get_unsolicited_message_prompt(ai_prefix: str, human_prefix: str) -> str:
@@ -33,13 +33,9 @@ def generate_unsolicited_message(
         ai_settings, contact_settings
     )
 
-    buffer_string = get_buffer_string(
-        model.memory.buffer,
-        ai_prefix=model.memory.ai_prefix,
-        human_prefix=model.memory.human_prefix,
-    )
+    chat_history = model.memory.load_memory_variables({})["chat_history"]
     prompt = "\n".join([prefix, suffix, prompt, "", f"{ai_prefix}:"]).format(
-        chat_history=buffer_string
+        chat_history=chat_history
     )
     llm = OpenAI(temperature=temperature)
     message = llm(prompt)

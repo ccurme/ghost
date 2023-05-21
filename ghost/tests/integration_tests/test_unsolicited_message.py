@@ -2,7 +2,7 @@ from textwrap import dedent
 import unittest
 
 from langchain.input import print_text
-from langchain.schema import AIMessage, HumanMessage, get_buffer_string
+from langchain.schema import AIMessage, HumanMessage
 
 from agent_utils import initialize_agent
 import unsolicited_message
@@ -51,11 +51,7 @@ class TestUnsolicitedMessage(unittest.TestCase):
             temperature=0.7,
         )
 
-        buffer_string = get_buffer_string(
-            agent.memory.buffer,
-            ai_prefix=agent.memory.ai_prefix,
-            human_prefix=agent.memory.human_prefix,
-        )
+        buffer_string = agent.memory.load_memory_variables({})["chat_history"]
         print_text(f"\n{buffer_string}", color="green")
 
         # Test first message
@@ -76,9 +72,5 @@ class TestUnsolicitedMessage(unittest.TestCase):
             contact_settings,
             temperature=0.7,
         )
-        buffer_string = get_buffer_string(
-            agent.memory.buffer,
-            ai_prefix=agent.memory.ai_prefix,
-            human_prefix=agent.memory.human_prefix,
-        )
+        buffer_string = agent.memory.load_memory_variables({})["chat_history"]
         print_text(buffer_string, color="green")
